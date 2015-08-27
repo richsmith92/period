@@ -1,0 +1,7 @@
+flags: {}
+packages:
+- '.'
+
+extra-deps:
+  - strptime-1.0.10
+resolver: nightly-2015-08-24
