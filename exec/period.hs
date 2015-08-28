@@ -1,10 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
-import Text.Period
-import Options.Applicative
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
+import           Data.Monoid
+import qualified Data.Text           as T
+import qualified Data.Text.IO        as T
+import           Options.Applicative
+import           Text.Period
+
+import Prelude
 
 main :: IO ()
 main = execParser (info (helper <*> optParser) $ progDesc "period") >>= runCommand

@@ -1,36 +1,38 @@
-{-# LANGUAGE LambdaCase   #-}
-{-# LANGUAGE MultiWayIf   #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
 
 module Text.Period
  ( Period, PeriodFmt(..), parsePeriod, parsePeriodMay, parsePeriodEither
  , formatPeriod, collapsePeriod
  )where
 
+import           Control.Applicative hiding ((<|>))
 import           Control.Arrow
 import           Control.Monad
 import           Data.Char
-import           Data.Monoid ((<>))
-import qualified Data.Text as T
+import           Data.Monoid         ((<>))
+import qualified Data.Text           as T
 import           Data.Time
-import           TextShow (showt)
 
-import           Text.Parsec.Char
-import           Text.Parsec.Combinator
-import           Text.Parsec.Prim
-import           Text.Parsec.Text
+import Prelude
+import TextShow (showt)
+
+import Text.Parsec.Char
+import Text.Parsec.Combinator
+import Text.Parsec.Prim
+import Text.Parsec.Text
 
 
 type Period = (Day, Day)
 
 data PeriodFmt = PeriodFmt
   { perFieldSep :: T.Text -- ^ Separator between year, month and day
-  , perDateSep :: T.Text -- ^ Separator between dates in the range, e.g. comma
-                         -- in @yyyy-mm-dd,yyyy-mm-dd@
+  , perDateSep  :: T.Text -- ^ Separator between dates in the range, e.g. comma
+                          -- in @yyyy-mm-dd,yyyy-mm-dd@
   }
 
 data ParseState
