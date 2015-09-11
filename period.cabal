@@ -1,5 +1,5 @@
 name:                period
-version:             0.1.0.1
+version:             0.1.0.2
 synopsis:            Parse and format date periods, collapse and expand their text representations.
 -- description:         
 homepage:            https://github.com/w3rs/period
