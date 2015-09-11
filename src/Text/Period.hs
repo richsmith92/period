@@ -10,13 +10,15 @@ module Text.Period
  , formatPeriod, collapsePeriod
  )where
 
+import System.Locale (defaultTimeLocale)
+
 import           Control.Applicative hiding ((<|>))
 import           Control.Arrow
 import           Control.Monad
 import           Data.Char
 import           Data.Monoid         ((<>))
 import qualified Data.Text           as T
-import           Data.Time
+import           Data.Time hiding (defaultTimeLocale)
 
 import Prelude
 import TextShow (showt)
