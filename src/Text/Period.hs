@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                   #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -10,15 +11,21 @@ module Text.Period
  , formatPeriod, collapsePeriod
  )where
 
-import System.Locale (defaultTimeLocale)
-
 import           Control.Applicative hiding ((<|>))
 import           Control.Arrow
 import           Control.Monad
 import           Data.Char
 import           Data.Monoid         ((<>))
 import qualified Data.Text           as T
-import           Data.Time hiding (defaultTimeLocale)
+
+#if MIN_VERSION_time(1, 5, 0)
+import Data.Time (defaultTimeLocale)
+#else
+import System.Locale (defaultTimeLocale)
+#endif
+
+import Data.Time.Calendar
+import Data.Time (formatTime)
 
 import Prelude
 import TextShow (showt)
