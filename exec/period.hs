@@ -27,7 +27,7 @@ parseFmt = PeriodFmt <$>
     help "Field separator, by default '-' as in 'yyyy-mm-dd'") <*>
   option (T.pack <$> str) (
     short 'd' <> long "date-sep" <> value "," <>
-    help "Field separator, by default ',' as in 'yyyy-mm-dd,yyyy-mm-dd'")
+    help "Start and end separator, by default ',' as in 'yyyy-mm-dd,yyyy-mm-dd'")
 
 
 mkCommand :: String -> String -> Parser Command -> Mod CommandFields Command

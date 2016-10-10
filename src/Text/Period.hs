@@ -50,7 +50,7 @@ data ParseState
   | StateDay Integer Int Int
   | StateNone
 
-number :: (Read a, Integral a) => Int -> Parser a
+number :: (Read a) => Int -> Parser a
 number n = read <$> count n digit
 
 skipFieldSep :: Stream s m Char => Bool -> T.Text -> ParsecT s u m ()
