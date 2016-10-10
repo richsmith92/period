@@ -1,5 +1,5 @@
 name:                period
-version:             0.1.0.3
+version:             0.1.0.4
 synopsis:            Parse and format date periods, collapse and expand their text representations.
 -- description:         
 homepage:            https://github.com/w3rs/period
@@ -16,7 +16,7 @@ cabal-version:       >=1.10
 library
   exposed-modules:     Text.Period
   build-depends:
-                base >=4.6 && < 4.9,
+                base >=4.6 && < 5.0,
                 time >= 1.4.2,
                 old-locale >= 1.0.0.6,
                 text >= 1.2,

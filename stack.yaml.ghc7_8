@@ -1,0 +1,11 @@
+flags: {}
+packages:
+- '.'
+
+extra-deps:
+  - strptime-1.0.10
+  - time-1.4.2
+  - text-show-2
+  - base-compat-0.8.1
+  - generic-deriving-1.8.0
+resolver: lts-2.22
