@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultiWayIf #-}
 
 module Main where
 
@@ -15,7 +16,11 @@ main = execParser (info (helper <*> optParser) $ progDesc "period") >>= runComma
 
 data Command
   = Collapse PeriodFmt T.Text
-  | Expand PeriodFmt T.Text
+  | Expand {
+    expandFmt :: PeriodFmt,
+    expandInput :: T.Text,
+    expandList :: Bool
+  }
 
 periodArg :: Parser T.Text
 periodArg = argument (T.pack <$> str) (metavar "PERIOD")
@@ -39,9 +44,13 @@ optParser = subparser $ mconcat $
   [ mkCommand "collapse" "Find shortest representation for time period" $
     Collapse <$> parseFmt <*> periodArg
   , mkCommand "expand" "Display start and end points of time period" $
-    Expand <$> parseFmt <*> periodArg
+    Expand <$> parseFmt <*> periodArg <*> switch (long "list" <> help "List all days in the period")
   ]
 
 runCommand :: Command -> IO ()
 runCommand (Collapse fmt per) = T.putStrLn $ collapsePeriod fmt $ parsePeriod per
-runCommand (Expand fmt per) = T.putStrLn $ formatPeriod fmt $ parsePeriod per
+runCommand (Expand fmt expandInput expandList) = if
+  | expandList -> T.putStr . T.unlines . map (collapsePeriod fmt . (\x -> (x, x))) $ uncurry enumFromTo p
+  | otherwise -> T.putStrLn $ formatPeriod fmt p
+  where
+  p = parsePeriod expandInput

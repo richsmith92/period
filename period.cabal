@@ -1,16 +1,16 @@
 name:                period
-version:             0.1.0.4
+version:             0.1.0.5
 synopsis:            Parse and format date periods, collapse and expand their text representations.
--- description:         
+-- description:
 homepage:            https://github.com/w3rs/period
 license:             BSD3
 license-file:        LICENSE
 author:              Alexey Karakulov
 maintainer:          ankarakulov@gmail.com
--- copyright:           
+-- copyright:
 category:            Text
 build-type:          Simple
--- extra-source-files:  
+-- extra-source-files:
 cabal-version:       >=1.10
 
 library
