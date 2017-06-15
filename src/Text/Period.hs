@@ -140,18 +140,24 @@ quarter = do
 -- to @yyyy-01@
 collapsePeriod :: PeriodFmt -> Period -> T.Text
 collapsePeriod (PeriodFmt fieldSep sep) (start, end) = if
-  | m1 == 1, d1 == 1, m2 == 12, d2 == 31 -> if
+  | start == end -> format yyyymmdd start
+  | all1 [m1, d1, m2', d2'] -> if -- years
       | y1 == y2 -> showt y1
       | otherwise -> showt y1 <> sep <> showt y2
-  | d1 == 1, end == monthEnd start -> format yyyymm start
-  | d1 == 1, end == quarterEnd start -> showt y1 <> "Q" <> showt q
-  | start == end -> format yyyymmdd start
+  | all1 [d1, d2'] -> if -- months
+      | y1 == y2, m1 == m2 -> format yyyymm start -- month
+      | y1 == y2, m1 `mod` 3 == 1, m2 - m1 == 2 -- quarter
+        -> showt y1 <> "Q" <> showt ((m1 - 1) `div` 3 + 1)
+      | otherwise
+        -> format yyyymm start <> sep <> if y1 == y2 then showt0 m2 else format yyyymm end
   | otherwise -> format yyyymmdd start <> sep <> format yyyymmdd end
   where
+  all1 = all (== 1)
   format f = T.pack . formatTime defaultTimeLocale f
+  showt0 n = let t = showt n in if T.length t == 1 then "0" <> t else t
   (y1, m1, d1) = toGregorian start
-  (y2, m2, d2) = toGregorian end
-  q = (m1 - 1) `div` 3 + 1
+  (y2, m2, _d2) = toGregorian end
+  (_y2', m2', d2') = toGregorian (succ end)
   yyyymm = T.unpack $ "%Y" <> fieldSep <> "%m"
   yyyymmdd = T.unpack $ "%Y" <> fieldSep <> "%m" <> fieldSep <> "%d"
 
@@ -162,9 +168,3 @@ formatPeriod (PeriodFmt fieldSep sep) (start, end) =
   where
   format = T.pack . formatTime defaultTimeLocale yyyymmdd
   yyyymmdd = T.unpack $ "%Y" <> fieldSep <> "%m" <> fieldSep <> "%d"
-
-monthEnd :: Day -> Day
-monthEnd = pred . addGregorianMonthsClip 1
-
-quarterEnd :: Day -> Day
-quarterEnd =  pred . addGregorianMonthsClip 3
