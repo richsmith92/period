@@ -47,7 +47,8 @@ executable period
                 period,
                 base,
                 text,
-                optparse-applicative
+                optparse-applicative,
+                ansi-wl-pprint
   GHC-options: -Wall -O2
 
 source-repository head
