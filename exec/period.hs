@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Main where
 
@@ -15,11 +16,13 @@ main :: IO ()
 main = execParser (info (helper <*> optParser) $ progDesc "period") >>= runCommand
 
 data Command
-  = Collapse PeriodFmt T.Text
-  | Expand {
-    expandFmt :: PeriodFmt,
-    expandInput :: T.Text,
-    expandList :: Bool
+  = Collapse {
+    colFmt :: PeriodFmt,
+    colInput :: T.Text
+  } | Expand {
+    expFmt :: PeriodFmt,
+    expInput :: T.Text,
+    expList :: Bool
   }
 
 periodArg :: Parser T.Text
@@ -48,9 +51,9 @@ optParser = subparser $ mconcat $
   ]
 
 runCommand :: Command -> IO ()
-runCommand (Collapse fmt per) = T.putStrLn $ collapsePeriod fmt $ parsePeriod per
-runCommand (Expand fmt expandInput expandList) = if
-  | expandList -> T.putStr . T.unlines . map (collapsePeriod fmt . (\x -> (x, x))) $ uncurry enumFromTo p
-  | otherwise -> T.putStrLn $ formatPeriod fmt p
+runCommand Collapse{..} = T.putStrLn $ collapsePeriod colFmt $ parsePeriod colInput
+runCommand Expand{..} = if
+  | expList -> T.putStr . T.unlines . map (collapsePeriod expFmt . (\x -> (x, x))) $ uncurry enumFromTo p
+  | otherwise -> T.putStrLn $ formatPeriod expFmt p
   where
-  p = parsePeriod expandInput
+  p = parsePeriod expInput
